@@ -1,0 +1,42 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nutriflow-backend
+  namespace: nutriflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nutriflow-backend
+  template:
+    metadata:
+      labels:
+        app: nutriflow-backend
+    spec:
+      containers:
+        - name: backend
+          image: 268666184272.dkr.ecr.ap-south-1.amazonaws.com/nutriflow-backend:5
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: nutriflow-backend-secret
+          readinessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
