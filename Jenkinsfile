@@ -59,23 +59,31 @@ stage('Backend Checks') {
 }
 
 
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    def scannerHome = tool 'SonarQubeScanner'
+        
+stage('SonarQube Analysis') {
+    steps {
+        script {
+            def scannerHome = tool(
+                name: 'SonarQubeScanner',
+                type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+            )
 
-                    withSonarQubeEnv('sonarqube') {
-                        sh """
-                            "\${scannerHome}/bin/sonar-scanner" \
-                              -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
-                              -Dsonar.projectName=NutriFlow \
-                              -Dsonar.sources=frontend/src,backend \
-                              -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**,**/package-lock.json
-                        """
-                    }
-                }
+            withSonarQubeEnv('sonarqube') {
+                sh """
+                    set -eu
+                    echo "Scanner installation: ${scannerHome}"
+                    ls -l "${scannerHome}/bin/sonar-scanner"
+                    "${scannerHome}/bin/sonar-scanner" \
+                      -Dsonar.projectKey=nutriflow \
+                      -Dsonar.projectName=NutriFlow \
+                      -Dsonar.sources=frontend/src,backend \
+                      -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/coverage/**,**/package-lock.json
+                """
             }
         }
+    }
+}
+
 
         stage('Build and Push Images') {
             steps {
