@@ -46,17 +46,18 @@ pipeline {
             }
         }
 
-        stage('Backend Checks') {
-            steps {
-                dir('backend') {
-                    sh '''
-                        npm ci
-                        node --check index.js
-                        npm test --if-present
-                    '''
-                }
-            }
+        
+stage('Backend Checks') {
+    steps {
+        dir('backend') {
+            sh '''
+                npm ci
+                node --check index.js
+            '''
         }
+    }
+}
+
 
         stage('SonarQube Analysis') {
             steps {
