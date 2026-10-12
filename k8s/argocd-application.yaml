@@ -1,0 +1,24 @@
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nutriflow
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Afthabahammed/nutriflow-deployment-plan.git
+    targetRevision: main
+    path: k8s
+    directory:
+      include: '{namespace.yaml,backend-deployment.yaml,backend-service.yaml,frontend-deployment.yaml,frontend-service.yaml}'
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nutriflow
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+
