@@ -12,3 +12,15 @@ npm-debug.log*
 Thumbs.db
 .vscode/
 .idea/
+
+# Terraform local files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+terraform.tfvars
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
